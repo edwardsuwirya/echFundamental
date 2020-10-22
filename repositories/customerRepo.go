@@ -1,6 +1,9 @@
 package repositories
 
-import "echFundamental/models"
+import (
+	"echFundamental/models"
+	guuid "github.com/google/uuid"
+)
 
 type CustomerRepo interface {
 	Save(c *models.Customer) error
@@ -14,7 +17,9 @@ type CustomerRepoImpl struct {
 }
 
 func (c *CustomerRepoImpl) Save(cust *models.Customer) error {
-	c.customerList = append(c.customerList,cust)
+	id := guuid.New()
+	cust.SetId(id.String())
+	c.customerList = append(c.customerList, cust)
 	return nil
 }
 
