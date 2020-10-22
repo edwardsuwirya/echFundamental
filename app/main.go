@@ -1,11 +1,13 @@
 package main
 
 import (
+	"echFundamental/infra"
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
 	router *gin.Engine
+	infra  infra.Infra
 }
 
 func (app *App) run() {
@@ -26,7 +28,7 @@ func (app *App) run() {
 			"message": "pong",
 		})
 	})
-	if err := app.router.Run("localhost:6969"); err != nil {
+	if err := app.router.Run(app.infra.ApiServer()); err != nil {
 		panic(err)
 	}
 
@@ -35,7 +37,8 @@ func (app *App) run() {
 func NewApp() *App {
 	//https://github.com/gin-gonic/gin
 	router := gin.Default()
-	return &App{router}
+	appInfra := infra.NewInfra()
+	return &App{router, appInfra}
 }
 func main() {
 	NewApp().run()
