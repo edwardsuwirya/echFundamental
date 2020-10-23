@@ -1,23 +1,20 @@
 package deliveries
 
 import (
-	"echFundamental/repositories"
 	"echFundamental/useCases"
 	"github.com/gin-gonic/gin"
 )
 
 type CustomerDelivery struct {
-	router *gin.Engine
+	router     *gin.Engine
+	controller *CustomerController
 }
 
-func NewCustomerDelivery(router *gin.Engine) AppDelivery {
-	return &CustomerDelivery{router}
+func NewCustomerDelivery(router *gin.Engine, custUseCase useCases.CustomerUseCase) AppDelivery {
+	return &CustomerDelivery{router, NewCustomerController(custUseCase)}
 }
 
 func (cd *CustomerDelivery) InitRoute() {
-	custRepo := repositories.NewCustomerRepo()
-	custUseCase := useCases.NewCustomerUseCase(custRepo)
-	custController := NewCustomerController(custUseCase)
 	customerRouter := cd.router.Group("/customer")
-	customerRouter.GET("", custController.getCustomerPagingController)
+	customerRouter.GET("", cd.controller.getCustomerPagingController)
 }
