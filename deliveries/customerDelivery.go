@@ -16,5 +16,6 @@ func NewCustomerDelivery(router *gin.Engine, custUseCase useCases.CustomerUseCas
 
 func (cd *CustomerDelivery) InitRoute() {
 	customerRouter := cd.router.Group("/customer")
+	customerRouter.GET("/:id", cd.controller.getCustomerById)
 	customerRouter.GET("", cd.controller.getCustomerPagingController)
 }

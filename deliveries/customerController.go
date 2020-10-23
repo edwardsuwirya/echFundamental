@@ -14,6 +14,11 @@ type CustomerController struct {
 func NewCustomerController(useCase useCases.CustomerUseCase) *CustomerController {
 	return &CustomerController{customerUseCase: useCase}
 }
+func (cc *CustomerController) getCustomerById(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"data": "123",
+	})
+}
 func (cc *CustomerController) getCustomerPagingController(c *gin.Context) {
 	// http://localhost:8080/customer?pageNo=1&totalPerPage=10
 	pageNo := c.DefaultQuery("pageNo", "1")
@@ -28,6 +33,8 @@ func (cc *CustomerController) getCustomerPagingController(c *gin.Context) {
 		})
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"data": customerList,
+		"data":      customerList,
+		"pageNo":    iPageNo,
+		"totalData": len(customerList),
 	})
 }
