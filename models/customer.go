@@ -3,18 +3,18 @@ package models
 import "fmt"
 
 type Customer struct {
-	id        string
-	firstName string
-	lastName  string
-	address   CustomerAddress
+	Id        string
+	FirstName string
+	LastName  string
+	Address   CustomerAddress
 }
 
 func (c *Customer) SetId(id string) {
-	c.id = id
+	c.Id = id
 }
 func (c *Customer) ToString() string {
 	return fmt.Sprintf("Customer (id: %s) with full name %s %s, address %s",
-		c.id, c.firstName, c.lastName, c.address.address)
+		c.Id, c.FirstName, c.LastName, c.Address.Address)
 }
 
 func NewCustomerDefault() *Customer {
@@ -22,11 +22,11 @@ func NewCustomerDefault() *Customer {
 }
 func NewCustomer(firstName, lastName, address string) *Customer {
 	return &Customer{
-		firstName: firstName,
-		lastName:  lastName,
-		address: CustomerAddress{
-			address: address,
-			city:    "",
+		FirstName: firstName,
+		LastName:  lastName,
+		Address: CustomerAddress{
+			Address: address,
+			City:    "",
 		},
 	}
 }

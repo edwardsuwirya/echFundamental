@@ -1,6 +1,6 @@
 package models
 
 type CustomerAddress struct {
-	address string
-	city string
+	Address string
+	City    string
 }

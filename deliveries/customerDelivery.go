@@ -1,34 +1,23 @@
 package deliveries
 
 import (
-	"echFundamental/models"
+	"echFundamental/repositories"
 	"echFundamental/useCases"
-	"fmt"
-	"log"
+	"github.com/gin-gonic/gin"
 )
 
 type CustomerDelivery struct {
-	customerUseCase useCases.CustomerUseCase
+	router *gin.Engine
 }
 
-func NewCustomerDelivery(customerUseCase useCases.CustomerUseCase) *CustomerDelivery {
-	return &CustomerDelivery{customerUseCase}
+func NewCustomerDelivery(router *gin.Engine) AppDelivery {
+	return &CustomerDelivery{router}
 }
 
-func (cd *CustomerDelivery) RegisterCustomerBulk(customerBulk ...*models.Customer) {
-	for _, c := range customerBulk {
-		if err := cd.customerUseCase.Register(c); err != nil {
-			panic(err)
-		}
-	}
-}
-
-func (cd *CustomerDelivery) PrintConsoleCustomerPaging(pageNo, totalPerPage int) {
-	userList, err := cd.customerUseCase.UserList(pageNo, totalPerPage)
-	if err != nil {
-		log.Println(err)
-	}
-	for _, c := range userList {
-		fmt.Println(c.ToString())
-	}
+func (cd *CustomerDelivery) InitRoute() {
+	custRepo := repositories.NewCustomerRepo()
+	custUseCase := useCases.NewCustomerUseCase(custRepo)
+	custController := NewCustomerController(custUseCase)
+	customerRouter := cd.router.Group("/customer")
+	customerRouter.GET("", custController.getCustomerPagingController)
 }

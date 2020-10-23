@@ -36,6 +36,8 @@ func (c *CustomerRepoImpl) FindAll() []*models.Customer {
 }
 func NewCustomerRepo() CustomerRepo {
 	repo := make([]*models.Customer, 0)
+	repo = append(repo, models.NewCustomer("Ibad", "Joss", "Ragunan"))
+	repo = append(repo, models.NewCustomer("Aldi", "Pakboiii", "Ragunan"))
 	return &CustomerRepoImpl{
 		customerList: repo,
 	}
