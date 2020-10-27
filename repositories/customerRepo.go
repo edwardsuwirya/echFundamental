@@ -11,6 +11,7 @@ type CustomerRepo interface {
 	Update(id string, newCustomer *models.Customer) error
 	Delete(id string) error
 	FindAll(pageNo, totalPerPage int) []*models.Customer
+	FindOne(id string) (*models.Customer, error)
 }
 
 type CustomerRepoImpl struct {
@@ -60,6 +61,21 @@ func (c *CustomerRepoImpl) FindAll(pageNo, totalPerPage int) []*models.Customer 
 		customerList = append(customerList, customer)
 	}
 	return customerList
+}
+
+func (c *CustomerRepoImpl) FindOne(id string) (*models.Customer, error) {
+	sql := "SELECT * FROM M_CUSTOMER WHERE id=?"
+	stmt, err := c.db.Prepare(sql)
+	if err != nil {
+		panic(err)
+	}
+	row := stmt.QueryRow(id)
+	customer := new(models.Customer)
+	if err := row.Scan(&customer.Id, &customer.FirstName, &customer.LastName, &customer.Address.Address, &customer.Address.City); err != nil {
+		return nil, err
+	}
+	return customer, nil
+
 }
 func NewCustomerRepo(dbConn *sql.DB) CustomerRepo {
 	return &CustomerRepoImpl{

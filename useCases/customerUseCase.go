@@ -16,7 +16,6 @@ type CustomerUseCaseImpl struct {
 }
 
 func (c *CustomerUseCaseImpl) Register(cust *models.Customer) error {
-
 	if err := c.customerRepo.Save(cust); err != nil {
 		return err
 	}
@@ -31,8 +30,7 @@ func (c *CustomerUseCaseImpl) UserList(pageNo, totalPerPage int) ([]*models.Cust
 	return userList, nil
 }
 func (c *CustomerUseCaseImpl) UserInfo(id string) (*models.Customer, error) {
-	//tugas
-	return nil, nil
+	return c.customerRepo.FindOne(id)
 }
 
 func NewCustomerUseCase(customerRepo repositories.CustomerRepo) CustomerUseCase {

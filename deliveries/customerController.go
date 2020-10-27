@@ -33,8 +33,15 @@ func (cc *CustomerController) registerCustomer(c *gin.Context) {
 }
 
 func (cc *CustomerController) getCustomerById(c *gin.Context) {
+	custId := c.Param("id")
+	cust, err := cc.customerUseCase.UserInfo(custId)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
 	c.JSON(http.StatusOK, gin.H{
-		"data": "123",
+		"data": cust,
 	})
 }
 func (cc *CustomerController) getCustomerPagingController(c *gin.Context) {
