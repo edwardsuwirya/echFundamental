@@ -12,6 +12,8 @@ const (
 	dataKey      = "data"
 	pageNoKey    = "pageNo"
 	totalDataKey = "totalData"
+	errorKey     = "error"
+	messageKey   = "message"
 )
 
 func (j *jsonResponder) SetContext(ctx interface{}) IResponder {
@@ -35,12 +37,12 @@ func (j *jsonResponder) SingleResponder(successCode int, data interface{}) {
 func (j *jsonResponder) ErrorResponder(errorCode int, appErrorCode string, errorMessage string) {
 	if appErrorCode != "" {
 		j.ctx.JSON(errorCode, gin.H{
-			"error":   appErrorCode,
-			"message": errorMessage,
+			errorKey:   appErrorCode,
+			messageKey: errorMessage,
 		})
 	} else {
 		j.ctx.JSON(errorCode, gin.H{
-			"message": errorMessage,
+			messageKey: errorMessage,
 		})
 	}
 }
