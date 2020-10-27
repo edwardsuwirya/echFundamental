@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"echFundamental/models"
 	"echFundamental/useCases"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -14,6 +15,23 @@ type CustomerController struct {
 func NewCustomerController(useCase useCases.CustomerUseCase) *CustomerController {
 	return &CustomerController{customerUseCase: useCase}
 }
+func (cc *CustomerController) registerCustomer(c *gin.Context) {
+	var customer models.Customer
+	if err := c.ShouldBindJSON(&customer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+	if err := cc.customerUseCase.Register(&customer); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err.Error(),
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": customer,
+	})
+}
+
 func (cc *CustomerController) getCustomerById(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"data": "123",

@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"echFundamental/infra"
 	"echFundamental/useCases"
 )
 
@@ -16,6 +17,6 @@ func (ucm *useCaseManager) CustomerUseCase() useCases.CustomerUseCase {
 	return useCases.NewCustomerUseCase(ucm.repoManager.CustomerRepo())
 }
 
-func NewUseCaseManager() UseCaseManager {
-	return &useCaseManager{NewRepoManager()}
+func NewUseCaseManager(infra infra.Infra) UseCaseManager {
+	return &useCaseManager{NewRepoManager(infra)}
 }

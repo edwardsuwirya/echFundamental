@@ -1,6 +1,8 @@
 package manager
 
 import (
+	"database/sql"
+	"echFundamental/infra"
 	"echFundamental/repositories"
 )
 
@@ -9,12 +11,14 @@ type RepoManager interface {
 }
 
 type repoManager struct {
+	sqlConn *sql.DB
+	infra   infra.Infra
 }
 
 func (rm *repoManager) CustomerRepo() repositories.CustomerRepo {
-	return repositories.NewCustomerRepo()
+	return repositories.NewCustomerRepo(rm.sqlConn)
 }
 
-func NewRepoManager() RepoManager {
-	return &repoManager{}
+func NewRepoManager(infra infra.Infra) RepoManager {
+	return &repoManager{infra.SqlDb(), infra}
 }

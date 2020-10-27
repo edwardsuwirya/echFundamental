@@ -3,10 +3,11 @@ package models
 import "fmt"
 
 type Customer struct {
-	Id        string
-	FirstName string
-	LastName  string
-	Address   CustomerAddress
+	//struct tag
+	Id        string          `json:"id""`
+	FirstName string          `json:"firstName"`
+	LastName  string          `json:"lastName"`
+	Address   CustomerAddress `json:"address"`
 }
 
 func (c *Customer) SetId(id string) {

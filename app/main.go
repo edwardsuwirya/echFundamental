@@ -12,7 +12,7 @@ type App struct {
 }
 
 func (app *App) run() {
-	deliveries.NewAppRouter(app.router).InitRouter()
+	deliveries.NewAppRouter(app.infra, app.router).InitRouter()
 	if err := app.router.Run(app.infra.ApiServer()); err != nil {
 		panic(err)
 	}
