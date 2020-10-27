@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"echFundamental/httpUtils/httpResponse"
 	"echFundamental/infra"
 	"echFundamental/manager"
 	"github.com/gin-gonic/gin"
@@ -18,5 +19,5 @@ func NewAppRouter(infra infra.Infra, router *gin.Engine) *appRouter {
 func (ar *appRouter) InitRouter() {
 	useCaseManager := manager.NewUseCaseManager(ar.infra)
 	ar.router.GET("/ping", pingController)
-	NewCustomerDelivery(ar.router, useCaseManager.CustomerUseCase()).InitRoute()
+	NewCustomerDelivery(ar.router, useCaseManager.CustomerUseCase(), httpResponse.NewJsonResponder()).InitRoute()
 }

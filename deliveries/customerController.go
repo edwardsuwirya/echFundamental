@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"echFundamental/httpUtils/httpResponse"
 	"echFundamental/models"
 	"echFundamental/useCases"
 	"github.com/gin-gonic/gin"
@@ -10,39 +11,30 @@ import (
 
 type CustomerController struct {
 	customerUseCase useCases.CustomerUseCase
+	responder       httpResponse.IResponder
 }
 
-func NewCustomerController(useCase useCases.CustomerUseCase) *CustomerController {
-	return &CustomerController{customerUseCase: useCase}
+func NewCustomerController(useCase useCases.CustomerUseCase, responder httpResponse.IResponder) *CustomerController {
+	return &CustomerController{customerUseCase: useCase, responder: responder}
 }
 func (cc *CustomerController) registerCustomer(c *gin.Context) {
 	var customer models.Customer
 	if err := c.ShouldBindJSON(&customer); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		cc.responder.SetContext(c).ErrorResponder(http.StatusBadRequest, "", err.Error())
 	}
 	if err := cc.customerUseCase.Register(&customer); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		cc.responder.SetContext(c).ErrorResponder(http.StatusBadRequest, "", err.Error())
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data": customer,
-	})
+	cc.responder.SetContext(c).SingleResponder(http.StatusOK, customer)
 }
 
 func (cc *CustomerController) getCustomerById(c *gin.Context) {
 	custId := c.Param("id")
-	cust, err := cc.customerUseCase.UserInfo(custId)
+	customer, err := cc.customerUseCase.UserInfo(custId)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"error": err.Error(),
-		})
+		cc.responder.SetContext(c).ErrorResponder(http.StatusBadRequest, "", err.Error())
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data": cust,
-	})
+	cc.responder.SetContext(c).SingleResponder(http.StatusOK, customer)
 }
 func (cc *CustomerController) getCustomerPagingController(c *gin.Context) {
 	// http://localhost:8080/customer?pageNo=1&totalPerPage=10
@@ -53,13 +45,7 @@ func (cc *CustomerController) getCustomerPagingController(c *gin.Context) {
 	iTotalPerPage, _ := strconv.Atoi(totalPerPage)
 	customerList, err := cc.customerUseCase.UserList(iPageNo, iTotalPerPage)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err,
-		})
+		cc.responder.SetContext(c).ErrorResponder(http.StatusInternalServerError, "", err.Error())
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"data":      customerList,
-		"pageNo":    iPageNo,
-		"totalData": len(customerList),
-	})
+	cc.responder.SetContext(c).PagingResponder(http.StatusOK, customerList, iPageNo, len(customerList))
 }

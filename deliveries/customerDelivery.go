@@ -1,6 +1,7 @@
 package deliveries
 
 import (
+	"echFundamental/httpUtils/httpResponse"
 	"echFundamental/useCases"
 	"github.com/gin-gonic/gin"
 )
@@ -10,8 +11,8 @@ type CustomerDelivery struct {
 	controller *CustomerController
 }
 
-func NewCustomerDelivery(router *gin.Engine, custUseCase useCases.CustomerUseCase) AppDelivery {
-	return &CustomerDelivery{router, NewCustomerController(custUseCase)}
+func NewCustomerDelivery(router *gin.Engine, custUseCase useCases.CustomerUseCase, responder httpResponse.IResponder) AppDelivery {
+	return &CustomerDelivery{router, NewCustomerController(custUseCase, responder)}
 }
 
 func (cd *CustomerDelivery) InitRoute() {
